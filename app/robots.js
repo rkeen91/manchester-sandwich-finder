@@ -1,16 +1,11 @@
-import { headers } from "next/headers";
+const DEFAULT_PROD = "https://manchester-sandwich-finder.vercel.app";
 
-export const revalidate = 0;
-
-function getSiteUrl() {
-  const h = headers();
-  const proto = h.get("x-forwarded-proto") || "https";
-  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-  return `${proto}://${host}`;
-}
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+  (process.env.NODE_ENV === "production" ? DEFAULT_PROD : "http://localhost:3000");
 
 export default function robots() {
-  const SITE = getSiteUrl();
   return {
     rules: [{ userAgent: "*", allow: "/" }],
     sitemap: `${SITE}/sitemap.xml`,

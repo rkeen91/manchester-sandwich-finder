@@ -1,17 +1,13 @@
 import { getAllPlaces } from "@/lib/places";
-import { headers } from "next/headers";
 
-export const revalidate = 0;
+const DEFAULT_PROD = "https://manchester-sandwich-finder.vercel.app";
 
-function getSiteUrl() {
-  const h = headers();
-  const proto = h.get("x-forwarded-proto") || "https";
-  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-  return `${proto}://${host}`;
-}
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+  (process.env.NODE_ENV === "production" ? DEFAULT_PROD : "http://localhost:3000");
 
 export default async function sitemap() {
-  const SITE = getSiteUrl();
   const places = await getAllPlaces();
   const now = new Date();
 
