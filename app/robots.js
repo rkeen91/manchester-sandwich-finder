@@ -1,8 +1,16 @@
-const SITE =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+import { headers } from "next/headers";
+
+export const revalidate = 0;
+
+function getSiteUrl() {
+  const h = headers();
+  const proto = h.get("x-forwarded-proto") || "https";
+  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
+  return `${proto}://${host}`;
+}
 
 export default function robots() {
+  const SITE = getSiteUrl();
   return {
     rules: [{ userAgent: "*", allow: "/" }],
     sitemap: `${SITE}/sitemap.xml`,
