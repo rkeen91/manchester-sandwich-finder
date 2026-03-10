@@ -1,4 +1,5 @@
-export const dynamicParams = true; // allow any slug param
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 import { notFound } from "next/navigation";
 import { getPlaceBySlug } from "@/lib/places";
@@ -6,13 +7,13 @@ import { getPlaceBySlug } from "@/lib/places";
 function cleanSlug(raw) {
   return decodeURIComponent(raw || "")
     .trim()
-    .replace(/[.,;:!?]+$/, ""); // remove trailing punctuation
+    .replace(/[\s\u200B-\u200D\uFEFF]+$/g, "")
+    .replace(/[.,;:!?]+$/g, "");
 }
 
 export async function generateMetadata({ params }) {
   const slug = cleanSlug(params.slug);
   const place = await getPlaceBySlug(slug);
-
   if (!place) return {};
 
   return {
@@ -30,9 +31,7 @@ export default async function PlacePage({ params }) {
   if (!place) notFound();
 
   const mapsUrl =
-    place.lat && place.lon
-      ? `https://www.google.com/maps?q=${place.lat},${place.lon}`
-      : null;
+    place.lat && place.lon ? `https://www.google.com/maps?q=${place.lat},${place.lon}` : null;
 
   const schema = {
     "@context": "https://schema.org",
