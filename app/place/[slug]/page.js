@@ -1,5 +1,4 @@
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
+export const dynamicParams = true; // allow any slug param
 
 import { notFound } from "next/navigation";
 import { getPlaceBySlug } from "@/lib/places";
@@ -7,19 +6,14 @@ import { getPlaceBySlug } from "@/lib/places";
 function cleanSlug(raw) {
   return decodeURIComponent(raw || "")
     .trim()
-    .replace(/[.,;:!?]+$/, ""); // remove trailing punctuation (common copy/paste issue)
+    .replace(/[.,;:!?]+$/, ""); // remove trailing punctuation
 }
 
 export async function generateMetadata({ params }) {
   const slug = cleanSlug(params.slug);
   const place = await getPlaceBySlug(slug);
 
-  if (!place) {
-    return {
-      title: "Place not found | Manchester Sandwich Finder",
-      description: "This listing could not be found.",
-    };
-  }
+  if (!place) return {};
 
   return {
     title: `${place.name} | Manchester Sandwich Finder`,
@@ -47,72 +41,28 @@ export default async function PlacePage({ params }) {
     address: place.address || undefined,
     geo:
       place.lat && place.lon
-        ? {
-            "@type": "GeoCoordinates",
-            latitude: place.lat,
-            longitude: place.lon,
-          }
+        ? { "@type": "GeoCoordinates", latitude: place.lat, longitude: place.lon }
         : undefined,
     url: place.website || undefined,
   };
 
   return (
-    <main
-      style={{
-        maxWidth: 900,
-        margin: "40px auto",
-        padding: "0 16px",
-        fontFamily: "system-ui",
-      }}
-    >
+    <main style={{ maxWidth: 900, margin: "40px auto", padding: "0 16px", fontFamily: "system-ui" }}>
       <h1>{place.name}</h1>
 
-      {place.address ? (
-        <p>
-          <strong>Address:</strong> {place.address}
-        </p>
-      ) : null}
-
-      {place.opening_hours ? (
-        <p>
-          <strong>Hours:</strong> {place.opening_hours}
-        </p>
-      ) : null}
-
-      {place.phone ? (
-        <p>
-          <strong>Phone:</strong> {place.phone}
-        </p>
-      ) : null}
-
+      {place.address ? <p><strong>Address:</strong> {place.address}</p> : null}
+      {place.opening_hours ? <p><strong>Hours:</strong> {place.opening_hours}</p> : null}
+      {place.phone ? <p><strong>Phone:</strong> {place.phone}</p> : null}
       {place.website ? (
-        <p>
-          <strong>Website:</strong>{" "}
-          <a href={place.website} rel="nofollow">
-            {place.website}
-          </a>
-        </p>
+        <p><strong>Website:</strong> <a href={place.website} rel="nofollow">{place.website}</a></p>
       ) : null}
-
-      {mapsUrl ? (
-        <p>
-          <a href={mapsUrl} rel="nofollow">
-            Open in Google Maps
-          </a>
-        </p>
-      ) : null}
+      {mapsUrl ? <p><a href={mapsUrl} rel="nofollow">Open in Google Maps</a></p> : null}
 
       <p style={{ fontSize: 14, opacity: 0.8 }}>
-        Source:{" "}
-        <a href={place.source} rel="nofollow">
-          OpenStreetMap
-        </a>
+        Source: <a href={place.source} rel="nofollow">OpenStreetMap</a>
       </p>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>
   );
 }
