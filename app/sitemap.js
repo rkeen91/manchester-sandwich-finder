@@ -8,5 +8,9 @@ export default async function sitemap() {
       url: SITE,
       lastModified: now,
     },
+    {
+      url: `${SITE}/sandwich-shops-manchester-city-centre`,
+      lastModified: now,
+    },
   ];
 }
