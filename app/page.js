@@ -33,14 +33,19 @@ export default async function Home() {
           borderRadius: 12,
         }}
       >
-        <h2 style={{ marginTop: 0 }}>Start with the city-centre guide</h2>
+        <h2 style={{ marginTop: 0 }}>Start with the guides</h2>
         <p>
-          Looking for something central? Use the main guide page instead of
-          scrolling the full directory.
+          Use the guide pages first if you want something more focused than the
+          full directory.
         </p>
         <p>
           <Link href="/sandwich-shops-manchester-city-centre">
             Sandwich shops in Manchester city centre →
+          </Link>
+        </p>
+        <p>
+          <Link href="/vegan-sandwiches-manchester">
+            Vegan sandwiches in Manchester →
           </Link>
         </p>
       </section>

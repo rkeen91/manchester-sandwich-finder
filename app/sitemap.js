@@ -12,5 +12,9 @@ export default async function sitemap() {
       url: `${SITE}/sandwich-shops-manchester-city-centre`,
       lastModified: now,
     },
+    {
+      url: `${SITE}/vegan-sandwiches-manchester`,
+      lastModified: now,
+    },
   ];
 }
